@@ -1,32 +1,60 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { map, tap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Subscription, exhaustMap, map, take, tap } from 'rxjs';
 import { Recipe } from '../recipes/recipe.model';
 import { RecipeService } from '../recipes/recipe.service';
+import { AuthService } from '../auth/auth.service';
+import { User } from '../auth/user/user.module';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DataStorageService {
-
-  constructor(private http: HttpClient, private recipeService: RecipeService) { }
+export class DataStorageService implements OnDestroy {
+  userInfo:Subscription | undefined;
+  recipes:any;
+  getUserData:any;
+  constructor(private http: HttpClient, private recipeService: RecipeService, private authService: AuthService) { }
 
   storedata() {
-    // debugger;
-    const recipes = this.recipeService.getRecipes();
-    this.http.post('http://localhost/soppycity/recipe_data.php?action=store', recipes).subscribe(postData => {
-      console.log(postData);
+
+        this.recipes = this.recipeService.getRecipes();
+        const localInfo=JSON.parse(localStorage.getItem('UserData')!);
+        this.recipes=this.recipes;
+        this.recipes[0].id=localInfo.id;
+        this.recipes[0].email=localInfo.email;
+        console.log(this.recipes);
+
+    const httpOptions = {
+      headers: new HttpHeaders({ 
+        'Content-Type': 'application/json',
+        'Authorization': localInfo.token
+      })
+    };
+    this.http.post('http://localhost/soppycity/recipe_data.php?action=store', this.recipes,httpOptions).subscribe(postData => {
+      // console.log(postData);
     })
   }
   getData() {
-   return this.http.get<Recipe[]>('http://localhost/soppycity/recipe_data.php?action=fetch').pipe(map(recipes => {
+      const localInfo=JSON.parse(localStorage.getItem('UserData')!);
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'id':localInfo.id,
+          'email':localInfo.email
+        })
+      };
+      return this.http.get<Recipe[]>('http://localhost/soppycity/recipe_data.php?action=fetch',httpOptions)
+    .pipe(map(recipes => {
       return recipes.map(recipe => {
         return {
           ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []
         };
       })
-      }),tap(recipes=>{
-        this.recipeService.setRecipes(recipes);
+    }), tap(recipes => {
+      this.recipeService.setRecipes(recipes);
     }))
+  }
+  ngOnDestroy(){
+    this.userInfo?.unsubscribe();
   }
 }
