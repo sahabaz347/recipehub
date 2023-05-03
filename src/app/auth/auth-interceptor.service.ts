@@ -6,14 +6,21 @@ import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthInterceptorService implements HttpInterceptor{
-  constructor( private authService:AuthService) { }
-  intercept(req: HttpRequest<any>, next: HttpHandler){
+export class AuthInterceptorService implements HttpInterceptor {
+  modifiedRequest: any;
+  constructor(private authService: AuthService) { }
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
     return this.authService.user.pipe(take(1), exhaustMap(user => {
-      const modifiedRequest=req.clone({
-        params:new HttpParams().set('auth',user?.token)
-      })
-      return next.handle(modifiedRequest);
+      if (!user) {
+        return next.handle(req);
+      } else if (user.token!= null) {
+        this.modifiedRequest = req.clone({
+          params: new HttpParams().set('auth', user?.token)
+        })
+      }
+      return next.handle(this.modifiedRequest);
+
+
     }));
   }
 

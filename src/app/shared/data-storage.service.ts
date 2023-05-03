@@ -20,14 +20,13 @@ export class DataStorageService implements OnDestroy {
         this.recipes = this.recipeService.getRecipes();
         const localInfo=JSON.parse(localStorage.getItem('UserData')!);
         this.recipes=this.recipes;
-        this.recipes[0].id=localInfo.id;
-        this.recipes[0].email=localInfo.email;
         console.log(this.recipes);
 
     const httpOptions = {
       headers: new HttpHeaders({ 
         'Content-Type': 'application/json',
-        'Authorization': localInfo.token
+        'id':localInfo.id,
+        'email':localInfo.email
       })
     };
     this.http.post('http://localhost/soppycity/recipe_data.php?action=store', this.recipes,httpOptions).subscribe(postData => {
