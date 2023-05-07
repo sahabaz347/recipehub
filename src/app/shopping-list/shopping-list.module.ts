@@ -15,4 +15,4 @@ import { ShoppingListRoutingModule } from "./shoppin-list-routing.module";
         CommonModule,RouterModule,ShoppingListRoutingModule
     ]
 })
-export class ShoppinListModule { }
+export class ShoppingListModule { }

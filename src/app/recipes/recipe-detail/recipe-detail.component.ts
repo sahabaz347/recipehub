@@ -10,6 +10,7 @@ import { RecipeService } from '../recipe.service';
 })
 export class RecipeDetailComponent implements OnInit {
  getrecipe!:Recipe ;
+ 
 isShow:boolean=false;
 isShowValue!:string;
 id!:number;

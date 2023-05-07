@@ -15,6 +15,7 @@ export class RecipeService {
     // console.log(this.recipes[1])
    }
    setRecipes(recipes:Recipe[]){
+    console.log(recipes)
     this.recipes=recipes;
     this.recipeChanged.next(this.recipes.slice());
    }
@@ -25,6 +26,7 @@ export class RecipeService {
 this.shopingListService.addIngridents(ingrdients);
   }
   getRecipe(index:number){
+    console.log(this.recipes[index])
 return this.recipes[index];
   }
   addRecipe(recipe:Recipe){

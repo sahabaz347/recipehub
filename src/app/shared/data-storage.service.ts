@@ -11,7 +11,7 @@ import { User } from '../auth/user/user.module';
 })
 export class DataStorageService implements OnDestroy {
   userInfo:Subscription | undefined;
-  recipes:any;
+  recipes!:Recipe[];
   getUserData:any;
   constructor(private http: HttpClient, private recipeService: RecipeService, private authService: AuthService) { }
 
@@ -44,15 +44,51 @@ export class DataStorageService implements OnDestroy {
       };
       return this.http.get<Recipe[]>('http://localhost/soppycity/recipe_data.php?action=fetch',httpOptions)
     .pipe(map(recipes => {
+      console.log(recipes)
       return recipes.map(recipe => {
+        if(typeof recipe.ingredients === 'string'){
+          recipe.ingredients=JSON.parse( recipe.ingredients);
+        }
         return {
-          ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : []
+          ...recipe ,ingredients: recipe.ingredients ?recipe.ingredients: []
         };
       })
     }), tap(recipes => {
       this.recipeService.setRecipes(recipes);
     }))
   }
+    // getData() {
+  //   const localInfo = JSON.parse(localStorage.getItem('UserData')!);
+  //   const httpOptions = {
+  //     headers: new HttpHeaders({
+  //       'Content-Type': 'application/json',
+  //       'id': localInfo.id,
+  //       'email': localInfo.email
+  //     })
+  //   };
+  //   return this.http.get<Recipe[]>('http://localhost/soppycity/recipe_data.php?action=fetch', httpOptions)
+  //     .pipe(
+  //       map(recipes => {
+  //         return recipes.map(recipe => {
+  //           let ingredients = [];
+  //           if (typeof recipe.ingredients === 'string') {
+  //             console.log(123);
+  //             ingredients = JSON.parse(recipe.ingredients);
+  //           } else {
+  //             console.log(222);
+  //             ingredients = recipe.ingredients;
+  //           }
+  //           return {
+  //             ...recipe,
+  //             ingredients: ingredients
+  //           };
+  //         });
+  //       }), 
+  //       tap(recipes => {
+  //         this.recipeService.setRecipes(recipes);
+  //       })
+  //     );
+  // }
   ngOnDestroy(){
     this.userInfo?.unsubscribe();
   }

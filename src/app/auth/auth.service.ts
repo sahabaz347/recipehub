@@ -66,7 +66,7 @@ clearTimeout(this.tokenExpireTime);
   private handleAuthentication(status: number, id: number, loginTime: number, email: any, token: any) {
     //  const expireTime:any=+loginTime+3600*24000;
     if (loginTime) {
-      var expireTime: any=30000;
+      var expireTime: any=3600*24000;
     } else {
       var expireTime: any = 0;
     }
