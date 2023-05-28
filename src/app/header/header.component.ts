@@ -17,11 +17,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isShowValue!: string;
   constructor(private dataStorageService: DataStorageService, private authService: AuthService) { }
   ngOnInit(): void {
+
 this.userSub=this.authService.user.subscribe(user=>{
 
     this.isAuthencated=!!user!;
+    console.log(this.isAuthencated);
+    setTimeout(() => {
+      this.fetchData();
+    }, 100);
 });
+
   }
+  
   checkIsOpen() {
     this.isShow = !this.isShow;
     this.isShowValue = (this.isShow == true) ? 'show' : 'hide';
@@ -37,7 +44,7 @@ this.userSub=this.authService.user.subscribe(user=>{
   }
 
   fetchData() {
-    this.dataStorageService.getData().subscribe();
+    this.dataStorageService.getData()?.subscribe();
   }
   logout(){
     this.authService.logout();

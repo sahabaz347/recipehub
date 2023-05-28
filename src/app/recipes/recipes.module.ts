@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RercipesRoutingModule } from './recipes-routing.module';
 import { SharedModule } from '../shared/shared.module';
+import { SkeletonLoaderModule } from '../skeleton-loader/skeleton-loader.module';
 
 
 
@@ -21,7 +22,7 @@ import { SharedModule } from '../shared/shared.module';
         RecipeStartComponent,
         RecipeEditComponent,
     ],
-  imports: [ReactiveFormsModule,RouterModule,RercipesRoutingModule,SharedModule
+  imports: [ReactiveFormsModule,RouterModule,RercipesRoutingModule,SharedModule,SkeletonLoaderModule
     ]
 })
 export class RecipesModule { }

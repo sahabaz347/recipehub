@@ -27,6 +27,9 @@ export class AuthService {
   }
 
   autoLogin() {
+    const result=(localStorage.getItem('UserData')!);
+    if(result){
+      const jsonRresult=JSON.parse(result);
     const UserData: {
       status: number;
       id: number;
@@ -34,7 +37,7 @@ export class AuthService {
       expireTime: any;
       email: string;
       token: string
-    } = JSON.parse(localStorage.getItem('UserData')!);
+    } = jsonRresult
     if (!UserData) {
       return;
     }
@@ -44,6 +47,7 @@ export class AuthService {
       // const currentTime=new Date().getTime()-UserData._loginTime -UserData. expireTime
       this.autoLogout(loadUser.expireTime);
     }
+  }
   }
 
   login(email: string, password: string) {

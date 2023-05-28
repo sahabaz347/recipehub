@@ -3,14 +3,14 @@ import { Routes, RouterModule } from "@angular/router";
 import { ShoppingListComponent } from "./shopping-list.component";
 import { ShoppingListModule } from "./shopping-list.module";
 const routes:Routes=[
-  {path:'shopping-list',component:ShoppingListComponent},
+  {path:'',component:ShoppingListComponent},
 ]
 @NgModule({
     declarations: [],
     imports: [
       RouterModule.forChild(routes)
     ],
-    exports:[ShoppingListModule]
+    exports:[RouterModule]
 })
 export class ShoppingListRoutingModule{
    

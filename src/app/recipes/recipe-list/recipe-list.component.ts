@@ -12,9 +12,7 @@ import { RecipeService } from '../recipe.service';
 export class RecipeListComponent implements OnInit,OnDestroy {
 recipes!:Recipe[];
 detectRecipeChange!:Subscription;
-constructor(private recipeService:RecipeService,private router:Router,private route:ActivatedRoute){
-
-}
+constructor(private recipeService:RecipeService,private router:Router,private route:ActivatedRoute){}
 ngOnInit(){
   this.detectRecipeChange=this.recipeService.recipeChanged.subscribe(
     (recipe:Recipe[])=>{
